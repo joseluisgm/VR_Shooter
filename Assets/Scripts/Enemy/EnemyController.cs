@@ -67,6 +67,8 @@ public class EnemyController : MonoBehaviour
         {
             GameManager.Instance.UpdateScore();
 
+            EnemySpawn.Instance.SpawnedEnemies.Remove(gameObject);
+
             Destroy(gameObject);
             yield break;
         }

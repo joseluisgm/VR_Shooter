@@ -5,9 +5,11 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-    public GameObject Invent;
-    public GameObject Anchor;
-    bool UIActive;
+    [SerializeField]
+    private GameObject Invent;
+    [SerializeField]
+    private GameObject Anchor;
+    private bool UIActive;
 
     private void Start()
     {
@@ -24,7 +26,7 @@ public class Inventory : MonoBehaviour
         }
         if (UIActive)
         {
-            Invent.transform.position = Anchor.transform.position;
+            Invent.transform.position = Anchor.transform.position + (Vector3.up * 3);
             Invent.transform.eulerAngles = new Vector3(Anchor.transform.eulerAngles.x + 15, Anchor.transform.eulerAngles.y -40, 0);
         }
     }

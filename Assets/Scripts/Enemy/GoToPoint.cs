@@ -5,13 +5,17 @@ using UnityEngine.AI;
 
 public class GoToPoint : MonoBehaviour
 {
-    [SerializeField]
     private List<Transform> returnPoints;
-    [SerializeField]
     private List<Transform> forwardPoints; 
     
     private bool moveBack;
     private NavMeshAgent agent;
+
+    private void Awake()
+    {
+        returnPoints = EnemySpawn.Instance.SpawnPoints;
+        forwardPoints = EnemySpawn.Instance.ForwardPoints;
+    }
 
     private void Start() => agent = GetComponent<NavMeshAgent>();
 
