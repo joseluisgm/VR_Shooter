@@ -5,28 +5,34 @@ using UnityEngine.AI;
 
 public class GoToPoint : MonoBehaviour
 {
-    public Transform pointA;
-    public Transform pointB;  
-    public bool moveBack;
-    public NavMeshAgent agent; 
+    [SerializeField]
+    private List<Transform> returnPoints;
+    [SerializeField]
+    private List<Transform> forwardPoints; 
+    
+    private bool moveBack;
+    private NavMeshAgent agent;
+
+    private void Start() => agent = GetComponent<NavMeshAgent>();
+
     // Update is called once per frame
     void Update()
     {
         if (moveBack==true)
         {
-            agent.SetDestination(pointA.position);
+            agent.SetDestination(returnPoints[Random.Range(0, returnPoints.Count - 2)].position);
             if (!agent.pathPending)
             {
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {                   
-                    agent.SetDestination(pointB.position);
+                    agent.SetDestination(forwardPoints[Random.Range(0, forwardPoints.Count - 2)].position);
                     moveBack = false;
                 }
             }
         }
         else
         {
-            agent.SetDestination(pointB.position);
+            agent.SetDestination(forwardPoints[Random.Range(0, forwardPoints.Count - 2)].position);
             if (!agent.pathPending)
             {
                 if (agent.remainingDistance <= agent.stoppingDistance)
