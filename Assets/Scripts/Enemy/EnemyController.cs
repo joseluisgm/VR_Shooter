@@ -23,7 +23,11 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private float lives;
     [SerializeField]
-    private List<GameObject> meshes;
+    private List<SkinnedMeshRenderer> meshes;
+    [SerializeField]
+    private List<Material> blinkMaterials;
+    private List<Material> originalMaterials;
+    private List<List<Material>> allMaterials;
     [SerializeField]
     private int blinkTimes;
     [SerializeField]
@@ -41,15 +45,25 @@ public class EnemyController : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         anim = plant.GetChild(0).GetComponent<Animator>();
+
+        /*foreach (var mesh in meshes)
+            foreach (var material in mesh.materials)
+                originalMaterials.Add(material);
+
+        allMaterials.Add(originalMaterials);
+        allMaterials.Add(blinkMaterials);*/
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.K))
+            StartCoroutine(TakeDamage(5));
+
         float agentVelocity = agent.velocity.magnitude;
 
         anim.speed = agentVelocity * walkSpeed;
-        manure.Rotate(Vector3.right * agentVelocity * rollSpeed * Time.deltaTime);
+        manure.Rotate(agentVelocity * rollSpeed * Time.deltaTime * Vector3.right);
 
         manureSize += agentVelocity * manureIncrement * Time.deltaTime;
         manure.parent.transform.localScale = Vector3.one * manureSize;
@@ -73,22 +87,32 @@ public class EnemyController : MonoBehaviour
             yield break;
         }
 
-        meshes.ForEach(x => x.SetActive(false));
-
-        for (int i = 1; i <= blinkTimes; i++)
+        /*for (int i = 1; i <= blinkTimes; i++)
         {
-            var activeMesh = meshes[i % meshes.Count];
+            List<Material> tempMaterials = new();
 
-            activeMesh.SetActive(true);
+            meshes.ForEach(x => 
+            {
+                foreach (var item in x.materials)
+                    tempMaterials.Add(item);
+            });
 
-            yield return new WaitForSeconds(0.25f);
+            for (int j = 0; j < tempMaterials.Count; j++)
+                tempMaterials[j] = allMaterials[i % allMaterials.Count][j];
 
-            activeMesh.SetActive(false);
+            yield return new WaitForSeconds(0.1f);
         }
 
-        meshes.ForEach(x => x.SetActive(false));
+        List<Material> materials = new();
 
-        meshes[0].SetActive(true);
+        meshes.ForEach(x =>
+        {
+            foreach (var item in x.materials)
+                materials.Add(item);
+        });
+
+        for (int j = 0; j < materials.Count; j++)
+            materials[j] = allMaterials[0][j];*/
 
         isTakingDamage = false;
     }

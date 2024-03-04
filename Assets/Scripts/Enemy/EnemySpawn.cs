@@ -32,8 +32,8 @@ public class EnemySpawn : MonoBehaviour
         else
             Destroy(this);
     }
-    public void StartWave() => StartCoroutine(SpawnEnemy());
 
+    public void StartWave() => StartCoroutine(SpawnEnemy());
 
     IEnumerator SpawnEnemy()
     {

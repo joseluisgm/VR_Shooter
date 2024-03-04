@@ -20,9 +20,7 @@ public class GameManager : MonoBehaviour
             Destroy(this);
     }
 
-    public void UpdateScore()
-    {
+    private void Start() => EnemySpawn.Instance.StartWave();
 
-        scoreText.text = score.ToString("00000");
-    }
+    public void UpdateScore() => scoreText.text = score.ToString("00000");
 }

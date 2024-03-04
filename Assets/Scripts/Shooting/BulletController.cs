@@ -15,7 +15,7 @@ public class BulletController : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            EnemyController enemy = other.GetComponent<EnemyController>();
+            EnemyController enemy = other.GetComponentInParent<EnemyController>();
 
             if (!enemy.IsTakingDamage)
                 StartCoroutine(enemy.TakeDamage(bulletDamage));
