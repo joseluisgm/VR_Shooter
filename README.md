@@ -1,4 +1,4 @@
 # Proyecto hecho por
-José Luís Gallardo Muñoz\n
-Lilith Estévez Boeta
-Álvaro Roldán
+José Luís Gallardo Muñoz  
+Lilith Estévez Boeta  
+Álvaro Roldán  
