@@ -12,6 +12,8 @@ public class ShootInput : MonoBehaviour
     private Transform shootPoint;
     [SerializeField]
     private List<GameObject> controllers;
+    [SerializeField]
+    private AudioSource shootSFX;
 
     void Update()
     {
@@ -26,7 +28,11 @@ public class ShootInput : MonoBehaviour
 
                 // Checks if the shooting button is pressed and shoot a bullet
                 if (OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger) || Input.GetKey(KeyCode.R))
+                {
+
                     Instantiate(bullet, new(shootPoint.position.x, shootPoint.position.y, shootPoint.position.z), shootPoint.rotation).GetComponent<Rigidbody>().AddForce(shootPoint.right * shootForce);
+                    shootSFX.Play();
+                }
             }
 
         }

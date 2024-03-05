@@ -12,12 +12,22 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI timerText;
     [SerializeField]
+    private TextMeshProUGUI livesText;
+    [SerializeField]
+    private TextMeshProUGUI restartText;
+    [SerializeField]
     private GameObject gameOverPanel;
     [SerializeField]
     private float time;
+    private float timeCounter;
+    [SerializeField]
+    private int lives;
+
+    private bool isRestarting;
 
     public static GameManager Instance { get; private set; }
-    public float RestTime { get => time; set => time = value; }
+    public float RestTime { get => timeCounter; set => timeCounter = value; }
+    public bool IsRestarting { get => isRestarting; set => isRestarting = value; }
 
     private void Awake()
     {
@@ -25,14 +35,19 @@ public class GameManager : MonoBehaviour
             Instance = this;
         else
             Destroy(this);
+
+        timeCounter = time;
+
+        livesText.text = "Lives: " + lives;
     }
 
     private void Update()
     {
-        time -= Time.deltaTime;
-        timerText.text = "Time: " + Mathf.RoundToInt(time).ToString("0000");
-        if (time <= 0)
-            GameOver();
+        if (!isRestarting)
+            timeCounter -= Time.deltaTime;
+            timerText.text = "Time: " + Mathf.RoundToInt(timeCounter).ToString("0000");
+            if (timeCounter <= 0)
+                StartCoroutine(GameOver());
     }
 
     private void Start() => EnemySpawn.Instance.StartWave();
@@ -42,10 +57,46 @@ public class GameManager : MonoBehaviour
     public void Restart()
     {
         Debug.Log("Hola;");
+
+        if (isRestarting)
+            EnemySpawn.Instance.SpawnedEnemies.ForEach(x =>
+            {
+                EnemySpawn.Instance.SpawnedEnemies.Remove(x);
+
+                Destroy(x);
+            });
+
+            timeCounter = time;
+
+        score = 0;
+
+        UpdateScore();
+
+        livesText.text = "Lives: " + lives;
     }
 
-    private void GameOver()
+    private IEnumerator GameOver()
     {
+        lives--;
+
+        if (lives <= 0)
+            Application.Quit();
+
+        isRestarting = true;
+
         gameOverPanel.SetActive(true);
+
+        Restart();
+
+        for (int i = 3; i >= 0; i--)
+        {
+            restartText.text = "Restart in " + i + " seconds";
+
+            yield return new WaitForSeconds(1);
+        }
+
+        gameOverPanel.SetActive(false);
+
+        isRestarting = false;
     }
 }
