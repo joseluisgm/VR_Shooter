@@ -81,6 +81,8 @@ public class EnemyController : MonoBehaviour
         {
             GameManager.Instance.UpdateScore();
 
+            GameManager.Instance.RestTime += 20;
+
             EnemySpawn.Instance.SpawnedEnemies.Remove(gameObject);
 
             Destroy(gameObject);

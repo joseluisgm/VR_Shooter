@@ -9,8 +9,15 @@ public class GameManager : MonoBehaviour
     private int score;
     [SerializeField]
     private TextMeshProUGUI scoreText;
+    [SerializeField]
+    private TextMeshProUGUI timerText;
+    [SerializeField]
+    private GameObject gameOverPanel;
+    [SerializeField]
+    private float time;
 
     public static GameManager Instance { get; private set; }
+    public float RestTime { get => time; set => time = value; }
 
     private void Awake()
     {
@@ -20,7 +27,25 @@ public class GameManager : MonoBehaviour
             Destroy(this);
     }
 
+    private void Update()
+    {
+        time -= Time.deltaTime;
+        timerText.text = "Time: " + Mathf.RoundToInt(time).ToString("0000");
+        if (time <= 0)
+            GameOver();
+    }
+
     private void Start() => EnemySpawn.Instance.StartWave();
 
-    public void UpdateScore() => scoreText.text = score.ToString("00000");
+    public void UpdateScore() => scoreText.text = "Score: " + score.ToString("00000");
+
+    public void Restart()
+    {
+        Debug.Log("Hola;");
+    }
+
+    private void GameOver()
+    {
+        gameOverPanel.SetActive(true);
+    }
 }
