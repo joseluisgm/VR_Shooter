@@ -19,6 +19,8 @@ public class BulletController : MonoBehaviour
 
             if (!enemy.IsTakingDamage)
                 StartCoroutine(enemy.TakeDamage(bulletDamage));
+
+            Destroy(gameObject);
         }
     }
 }

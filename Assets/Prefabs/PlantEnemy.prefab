@@ -88,7 +88,7 @@ MonoBehaviour:
   manureIncrement: 0.025
   walkSpeed: 0.5
   rollSpeed: 60
-  lives: 50
+  lives: 5
   meshes:
   - {fileID: 5652470848199956437}
   - {fileID: 1460671657663860345}

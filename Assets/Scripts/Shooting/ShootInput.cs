@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -14,30 +15,81 @@ public class ShootInput : MonoBehaviour
     private List<GameObject> controllers;
     [SerializeField]
     private AudioSource shootSFX;
+    [SerializeField]
+    private AudioClip shootClip;
+    [SerializeField]
+    private float cadencyTime;
+    [SerializeField]
+    private ControllerHand controllerHand;
+    private float counter;
+
+    private void Start()
+    {
+        counter = cadencyTime;
+    }
 
     void Update()
     {
-        // Checks if the gun is grabbed
-        if (GetComponent<OVRGrabbable>().isGrabbed || Input.GetKey(KeyCode.R))
+        counter -= Time.deltaTime;
+
+        if (controllerHand == ControllerHand.RHAND)
         {
-            // Checks if the grab button is pressed
-            if (OVRInput.Get(OVRInput.Button.SecondaryHandTrigger) || Input.GetKey(KeyCode.R))
+            // Checks if the gun is grabbed
+            if (GetComponent<OVRGrabbable>().isGrabbed || Input.GetKey(KeyCode.R))
             {
-                // Deactivate controllers meshes
-                controllers.ForEach(x => x.SetActive(false));
-
-                // Checks if the shooting button is pressed and shoot a bullet
-                if (OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger) || Input.GetKey(KeyCode.R))
+                // Checks if the grab button is pressed
+                if (OVRInput.Get(OVRInput.Button.SecondaryHandTrigger) || Input.GetKey(KeyCode.R))
                 {
+                    // Deactivate controllers meshes
+                    controllers.ForEach(x => x.SetActive(false));
 
-                    Instantiate(bullet, new(shootPoint.position.x, shootPoint.position.y, shootPoint.position.z), shootPoint.rotation).GetComponent<Rigidbody>().AddForce(shootPoint.right * shootForce);
-                    shootSFX.Play();
+                    // Checks if the shooting button is pressed and shoot a bullet
+                    if ((OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger) && counter <= 0) || Input.GetKey(KeyCode.R))
+                    {
+                        counter = cadencyTime;
+                        Instantiate(bullet, new(shootPoint.position.x, shootPoint.position.y, shootPoint.position.z), shootPoint.rotation).GetComponent<Rigidbody>().AddForce(shootPoint.right * shootForce);
+                        shootSFX.pitch = Random.Range(0.8f, 1.2f);
+                        shootSFX.PlayOneShot(shootClip);
+                    }
                 }
-            }
 
+            }
+            // Activate controllers meshes
+            else
+                controllers.ForEach(x => x.SetActive(true));
         }
-        // Activate controllers meshes
-        else
-            controllers.ForEach(x => x.SetActive(true));
+        else if (controllerHand == ControllerHand.LHAND)
+        {
+            // Checks if the gun is grabbed
+            if (GetComponent<OVRGrabbable>().isGrabbed || Input.GetKey(KeyCode.R))
+            {
+                // Checks if the grab button is pressed
+                if (OVRInput.Get(OVRInput.Button.PrimaryHandTrigger) || Input.GetKey(KeyCode.R))
+                {
+                    // Deactivate controllers meshes
+                    controllers.ForEach(x => x.SetActive(false));
+
+                    // Checks if the shooting button is pressed and shoot a bullet
+                    if ((OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger) && counter <= 0) || Input.GetKey(KeyCode.R))
+                    {
+                        counter = cadencyTime;
+                        Instantiate(bullet, new(shootPoint.position.x, shootPoint.position.y, shootPoint.position.z), shootPoint.rotation).GetComponent<Rigidbody>().AddForce(shootPoint.right * shootForce);
+                        shootSFX.pitch = Random.Range(0.8f, 1.2f);
+                        shootSFX.PlayOneShot(shootClip);
+                    }
+                }
+
+            }
+            // Activate controllers meshes
+            else
+                controllers.ForEach(x => x.SetActive(true));
+        }
+        
     }
+}
+
+public enum ControllerHand
+{
+    LHAND,
+    RHAND
 }

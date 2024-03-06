@@ -39,6 +39,8 @@ public class EnemySpawn : MonoBehaviour
     { 
         yield return new WaitUntil(() => spawnedEnemies.Count == 0);
 
+        GameManager.Instance.RestTime += 10;
+
         yield return new WaitUntil(() => !GameManager.Instance.IsRestarting);
 
         for (int i = 0; i < enemyNumber; i++)
