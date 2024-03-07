@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public float RestTime { get => timeCounter; set => timeCounter = value; }
     public bool IsRestarting { get => isRestarting; set => isRestarting = value; }
+    public int Score { get => score; set => score = value; }
 
     private void Awake()
     {
@@ -56,15 +57,15 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
-        Debug.Log("Hola;");
-
         if (isRestarting)
-            EnemySpawn.Instance.SpawnedEnemies.ForEach(x =>
+            for (int i = 0; i < EnemySpawn.Instance.SpawnedEnemies.Count; i++)
             {
-                EnemySpawn.Instance.SpawnedEnemies.Remove(x);
+                var enemy = EnemySpawn.Instance.SpawnedEnemies[i];
 
-                Destroy(x);
-            });
+                EnemySpawn.Instance.SpawnedEnemies.RemoveAt(i);
+
+                Destroy(enemy);
+            }
 
             timeCounter = time;
 

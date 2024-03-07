@@ -79,6 +79,8 @@ public class EnemyController : MonoBehaviour
 
         if (lives <= 0)
         {
+            GameManager.Instance.Score += 100;
+
             GameManager.Instance.UpdateScore();
 
             EnemySpawn.Instance.SpawnedEnemies.Remove(gameObject);
